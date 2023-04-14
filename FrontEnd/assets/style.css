@@ -123,8 +123,39 @@ li:hover {
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+	margin-bottom: 51px;
 }
+
+.filters {
+	margin:auto;
+	display: flex;
+	justify-content: space-evenly;
+	gap: 10px;
+	margin-bottom: 51px;
+	max-width: 50%;
+
+}
+
+.btn-filter {
+	border-radius: 60px;
+	border: 1px solid #1D6154;
+	background-color: #ffffff00;
+	color: #1D6154;
+	font-weight: 700;
+	font-family: 'Syne';
+	font-size: 16px;
+	text-align: center;
+	padding-top: 9px;
+	padding-bottom: 9px;
+	min-width: 100px;
+}
+
+.btn-filter:hover, .btn-gilter:active{
+	background-color: #1D6154;
+	color: white;
+}
+
+
 .gallery {
 	width: 100%;
 	display: grid;
