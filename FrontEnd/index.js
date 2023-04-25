@@ -1,93 +1,102 @@
-// FONCTION THAT LOADS THE PAGE
-const loadWorks = async () => {
-    try {
-        const response = await fetch('http://localhost:5678/api/works');
-        const works = await response.json();
-
-        for (let i=0; i < works.length; i++) {
-
-            const work = works[i];
-        
-            // // Récupération de l'element du DOM qui acceuillera les travaux
+fetch('http://localhost:5678/api/works')
+    .then(response => response.json())
+    .then(
+        function loadWorks(works) {
             const sectionGallery = document.querySelector('.gallery');
         
-            // // Création des balises
-            const workElement = document.createElement("figure");
-            const imageElement = document.createElement('img');
-            imageElement.src = work.imageUrl;
-            const captionElement = document.createElement('figcaption');
-            captionElement.innerText = work.title;
+            for (let i=0; i < works.length; i++) {
+        
+                const work = works[i];
+        
+                // Création des balises
+                const workElement = document.createElement("figure");
+
+                workElement.dataset.category = work.category.name;
+
+                const imageElement = document.createElement('img');
+                imageElement.src = work.imageUrl;
+                const captionElement = document.createElement('figcaption');
+                captionElement.innerText = work.title;
             
-            sectionGallery.appendChild(workElement);
+                workElement.appendChild(imageElement);
+                workElement.appendChild(captionElement);
+        
+                sectionGallery.appendChild(workElement);
             
-            workElement.appendChild(imageElement);
-            workElement.appendChild(captionElement);
-            
-          }  
+            } 
+        }
+     )
+    .catch(error => console.log(error));
+ // pourquoi est ce que je n'ai pas besoin d'appeler la fonction ?
+
+ const buttonSection = document.querySelector('.filters');
+
+ fetch('http://localhost:5678/api/categories')
+    .then(response => response.json())
+    .then( 
+        function createButtons (buttons) {
+            for (let i=0; i < buttons.length; i++) {
+
+                const button = buttons[i];
+
+                const buttonElement = document.createElement("button");
+                buttonElement.innerText = button.name;
+                buttonSection.appendChild(buttonElement)
+                buttonElement.className = "btn-filter";
+                buttonElement.dataset.filter = button.name;
+            }
+        }
+    )
+    .catch(error => console.log(error));
 
 
-    } catch (error) {
-        console.error(error);
-    } 
+    buttonSection.addEventListener("click", (event) => {
+        const el = event.target;
 
-}
+        const filter = el.dataset.filter;
+        console.log(filter);
 
-// FIRST LOADING OF THE PAGE
+        const allFigures = document.querySelectorAll('[data-category]');
+        const show = document.querySelectorAll(`[data-category="${filter}"]`);
 
-loadWorks();
+        console.log(`[data-category="${filter}"]`);
+        
 
-// LISTENER TO FILTER THE WORKS
-
-const buttonFilters = async () => {
-    const response = await fetch('http://localhost:5678/api/works');
-    const works = await response.json();
-    
-    const buttonFilterObjets = document.querySelector('.btn-filter');
-
-    buttonFilterObjets.addEventListener("click", function(){
-        const objetsFiltered = works.filter( function (work) {
-            return work.category.name === 'Objets';
+        allFigures.forEach(e => {
+            e.style.display = "none";
+            if(filter === "tous") {
+                allFigures.forEach(e => {
+                    e.style.display = "block";
+                });
+            }
         });
-        document.querySelector('.gallery').innerHTML = '';
-        loadWorks(objetsFiltered);
+
+        show.forEach(e => {
+            e.style.display = "block";
+        })
+
     });
 
-}
 
-buttonFilters();
+// LOGIN FORM
 
-// LOADED CATEGORIES AND LOOPED ARRAY BY ID CATEGORY
+// function listenerLogIn() {
+//     const logInForm = document.querySelector(#login-inputs);
+//     logInForm.addEventListener("submit", function (event){
+//         event.preventDefault();
 
-// const loadCategories = async () => {
-//     try {
-//         const response = await fetch('http://localhost:5678/api/categories');
-//         const categories = await response.json();
-
-//         for (let i=0; i < categories.length; i++) {
-
-//         const categorie = categories[i];
-
-//         console.log(categorie.id);
+//         const login = {
+//             email: event.target.querySelector("name=email").value,
+//             motDePasse: event.target.querySelector("name=password").value,
 //         }
 
-//     } catch (error) {
-//         console.error(error);
-//     } 
-// }
-// loadCategories();
+//         const body = JSON.stringify(login);
 
+//         fetch("http://localhost:5678/api/users/login", {
+//             method: "POST",
+//             headers: { "Content-type": "application/json"},
+//             body: body
+//         });
 
-
-
-// BUTTON FILTER
-
-// const buttonFilter = document.querySelector('btn-filter');
-
-// buttonFilter.addEventListener("click", function(){
-//     const objetsFilter = categories.filter( categorie => {
-//         return categorie.id === 1;
 //     });
-//     console.log(objetsFilter);
-// });
-
-
+// }
