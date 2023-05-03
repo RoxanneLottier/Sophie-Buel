@@ -208,14 +208,14 @@ button.active {
 	flex-direction: column;
 }
 
-#contact input, #login-inputs input {
+#contact input, #login-inputs input, #login-button {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-#contact label, #login-inputs label  {
+#contact label, #login-inputs label, #login-button  {
 	margin: 2em 0 1em 0;
 }
 
@@ -224,12 +224,12 @@ button.active {
 	text-decoration: underline;
 }
 
-#contact textarea {
+#contact textarea, #login-button {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"]{
+input[type="submit"], #login-button{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
