@@ -6,27 +6,73 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script type="module" src="index.js"></script>
 </head>
 <body>
+	<div id="edit-mode" class="hide">
+		<img src="./assets/icons/editicon.svg" alt="edit">
+		<p>Mode édition</p>
+		<button type="submit">publier les changements</button>
+	</div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>
 		<ul>
 			<li><a href="index.html">projets</a></li>
 			<li>contact</li>
-			<li><a href="pages/pagelogin.html">login</a></li>
+			<li id="login"><a href="pages/pagelogin.html">login</a></li>
+			<li id="logout" class="hide">logout</li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
 <main>
+	<dialog id="modal-gallery">
+		<img src="./assets/icons/closeicon.svg" alt="close-icon" id="close-modal" type="button">
+		<!-- <span class="close">&times;</span> other option for close button-->
+		<div id="modal-first-page" class="hide">
+			<div class="modal-content">
+				<h2>Galerie photo</h2>
+				<div class="edit-gallery" type="modal">
+				</div>
+				<hr>
+				<button type="button" class="submit-button" id="add-image-button">Ajouter une photo</button>
+				<span>Supprimer la galerie</span>
+			</div>
+		</div>
+		<div id="modal-second-page" class="">
+			<div class="modal-content">
+				<h2>Ajout photo</h2>
+				<div class="add-image-wrapper">
+					<img src="./assets/icons/pictureicon.svg" alt="picture-icon">
+					<button type="file">+ Ajouter photo</button>
+					<p>jpg, png: 4mo max</p>
+				</div>
+				<form id="add-image-form">
+					<label for="titre">Titre</label>
+					<input type="text" name="titre" id="titre">
+	
+					<label for="category">Catégorie</label>
+					<select id="category" name="category">
+						<!-- Write the options here with api
+						<option value="objets">Objects</option> -->
+					</select>
+					<hr>
+					<button type="submit" class="submit-button">Valider</button>
+				</form>
+			</div>
+		</div>
+	</dialog>
 	<section id="introduction">
 		<figure>
-			<img src="./assets/images/sophie-bluel.png" alt="">
+			<img id="designer-image" src="./assets/images/sophie-bluel.png" alt="">
+			<figcaption class="modify-button hide">
+				<a href=""><img src="./assets/icons/editiconblack.svg" alt="edit"></a>
+				<a href="">modifier</a>
+			</figcaption>
 		</figure>
 		<article>
 			<h2>Designer d'espace</h2>
@@ -36,17 +82,23 @@
 		</article>
 	</section>
 	<section id="portfolio">
+		<div id="portfolio-title">
 		<h2>Mes Projets</h2>
+		<div class="modify-button hide">
+			<a href=""><img src="./assets/icons/editiconblack.svg" alt="edit"></a>
+			<a href="">modifier</a>
+		</div>
+		</div>
 		<div class="filters">
 			<button class="btn-filter active" data-filter="tous">Tous</button>
 			<template id="button-filter">
-				<button class="btn-filter" data-filter="tous">Tous</button>
+				<button class="btn-filter" data-filter="Your-text-here">Your text here</button>
 			</template>
 			<!-- <button class="btn-filter" data-filter="Objets">Objets</button>
 			<button class="btn-filter" data-filter="Appartements">Appartements</button>
 			<button class="btn-filter" data-filter="Hotels & restaurants">Hôtels & restaurants</button> -->
 		</div>
-		<div class="gallery">
+		<div class="gallery" type="gallery">
 		</div>
 	</section>
 	<section id="contact">
@@ -59,7 +111,7 @@
 			<input type="email" name="email" id="email">
 			<label for="message">Message</label>
 			<textarea name="message" id="message" cols="30" rows="10"></textarea>
-			<input type="submit" value="Envoyer">
+			<input type="submit" value="Envoyer" class="submit-button">
 		</form>
 	</section>
 </main>

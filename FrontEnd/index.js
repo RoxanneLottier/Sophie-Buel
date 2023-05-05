@@ -2,33 +2,100 @@
 fetch('http://localhost:5678/api/works')
     .then(response => response.json())
     .then(
-        function loadWorks(works) {
+
+        function loadWorks(works, type='modal') {
             const sectionGallery = document.querySelector('.gallery');
         
-            for (let i=0; i < works.length; i++) {
-        
-                const work = works[i];
-        
-                // Création des balises
-                const workElement = document.createElement("figure");
+            // FONCTION INITIAL
 
-                workElement.dataset.category = work.category.name;
-
-                const imageElement = document.createElement('img');
-                imageElement.src = work.imageUrl;
-                const captionElement = document.createElement('figcaption');
-                captionElement.innerText = work.title;
-            
-                workElement.appendChild(imageElement);
-                workElement.appendChild(captionElement);
+            // for (let i=0; i < works.length; i++) {
         
-                sectionGallery.appendChild(workElement);
+            //     const work = works[i];
+        
+            //     // Création des balises
+            //     const workElement = document.createElement("figure");
+
+            //     workElement.dataset.category = work.category.name;
+
+            //     const imageElement = document.createElement('img');
+            //     imageElement.src = work.imageUrl;
+            //     const captionElement = document.createElement('figcaption');
+            //     captionElement.innerText = work.title;
             
-            } 
+            //     workElement.appendChild(imageElement);
+            //     workElement.appendChild(captionElement);
+        
+            //     sectionGallery.appendChild(workElement);
+            
+            // } 
+
+            if (type === 'gallery') {
+                for (let i=0; i < works.length; i++) {
+        
+                    const work = works[i];
+            
+                    // Création des balises
+                    const workElement = document.createElement("figure");
+    
+                    workElement.dataset.category = work.category.name;
+    
+                    const imageElement = document.createElement('img');
+                    imageElement.src = work.imageUrl;
+                    const captionElement = document.createElement('figcaption');
+                    captionElement.innerText = work.title;
+                
+                    workElement.appendChild(imageElement);
+                    workElement.appendChild(captionElement);
+            
+                    sectionGallery.appendChild(workElement);
+                
+                } 
+
+            } else if (type === 'modal') { 
+                const modalGallery = document.querySelector('.edit-gallery')
+                for (let i=0; i < works.length; i++) {
+        
+                    const work = works[i];
+            
+                    // Création des balises
+                    const workElement = document.createElement("figure");
+    
+                    workElement.dataset.category = work.category.name;
+    
+                    const imageElement = document.createElement('img');
+                    imageElement.src = work.imageUrl;
+
+                    //div for edit icons
+                    const editElements = document.createElement("div");
+                    editElements.classList.add("edit-icons");
+
+                    const binIconElement = document.createElement('img')
+                    binIconElement.src = "./assets/icons/binicon.svg";
+
+                    const moveIconElement = document.createElement('img');
+                    moveIconElement.src = "./assets/icons/moveicon.svg"
+
+                    binIconElement.classList.add("bin-icon");
+                    moveIconElement.classList.add("move-icon");
+
+                    const captionElement = document.createElement('figcaption');
+                    captionElement.innerText = 'éditer';
+                
+                    workElement.appendChild(imageElement);
+                    workElement.appendChild(captionElement);
+                    workElement.appendChild(editElements);
+                    editElements.appendChild(binIconElement);
+                    editElements.appendChild(moveIconElement);
+            
+                    modalGallery.appendChild(workElement);
+                
+                } 
+
+            }
         }
+
      )
     .catch(error => console.log(error));
- // pourquoi est ce que je n'ai pas besoin d'appeler la fonction ?
 
  // CREATE BUTTONS
  const buttonSection = document.querySelector('.filters');
@@ -90,3 +157,61 @@ fetch('http://localhost:5678/api/works')
         }
 
         );
+
+// Change page if Token is in sessionStorage
+const modifyButtons = document.querySelectorAll('.modify-button');
+
+function editPage () {
+    const tokenExists =(sessionStorage.getItem('token') !== null);
+    if (tokenExists) {
+        console.log(sessionStorage.token);
+        const editBar = document.querySelector('#edit-mode');
+        editBar.classList.remove('hide');
+
+        const logoutButton = document.querySelector('#logout');
+        const loginButton = document.querySelector('#login');
+        logoutButton.classList.remove('hide');
+        loginButton.classList.add('hide');
+
+        buttonSection.classList.add('hide');
+
+        modifyButtons.forEach(button => {
+            button.classList.remove('hide');
+        })
+        
+    }
+}
+
+editPage();
+
+// Create Modal
+
+const modal = document.querySelector('#modal-gallery');
+
+function openModal() {
+modifyButtons.forEach(button => {
+    button.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.showModal();
+    })
+})
+}
+
+openModal();
+
+const closeButton = document.querySelector('#close-modal');
+
+closeButton.addEventListener("click", (e) => {
+    modal.close();
+} )
+
+
+// open modal add image
+
+    const addImageButton = document.querySelector('#add-image-button');
+console.log(addImageButton);
+
+addImageButton.addEventListener('click', (event) => {
+    console.log(event.target);
+})
+

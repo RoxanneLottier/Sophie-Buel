@@ -98,6 +98,11 @@ nav li {
 	font-weight: 400;
 }
 
+nav ul li img {
+	height: 19.36px;
+	width: 19.36px;
+}
+
 nav ul li a {
 	text-decoration: none;
 	color:black;
@@ -119,10 +124,11 @@ nav ul li a:hover {
 #introduction figure {
 	flex: 1
 }
-#introduction img {
+#introduction #designer-image {
 	display: block;
 	margin: auto;
 	width: 80%;
+	margin-bottom: 13px;
 }
 
 #introduction article {
@@ -135,10 +141,11 @@ nav ul li a:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
-#portfolio h2 {
+
+/* #portfolio h2 {
 	text-align: center;
 	margin-bottom: 51px;
-}
+} */
 
 .filters {
 	margin:auto;
@@ -201,21 +208,21 @@ button.active {
 	margin-bottom: 20px;
 }
 
-#contact form, #login-inputs {
+#contact form, #login-inputs, #add-image-form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input, #login-inputs input, #login-button {
+#contact input, #login-inputs input, .submit-button, #add-image-form input, #add-image-form select {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-#contact label, #login-inputs label, #login-button  {
+#contact label, #login-inputs label, #add-image-form label{
 	margin: 2em 0 1em 0;
 }
 
@@ -224,23 +231,33 @@ button.active {
 	text-decoration: underline;
 }
 
-#contact textarea, #login-button {
+#contact textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"], #login-button{
+.submit-button{
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
 	background-color: #1D6154;
 	margin : 2em auto ;
-	width: 180px;
+	min-width: 180px;
 	text-align: center;
 	border-radius: 60px ;
 }
+
+#add-image-form .submit-button{
+	background-color: #A7A7A7;
+	font-size: 14px;
+	width: 237px;
+}
+
 footer {
 	background-color: white;
+	min-width: 100vw;
+	position: relative;
+	left: calc(-50vw + 50%);
 
 }
 footer nav ul {
@@ -250,3 +267,171 @@ footer nav ul {
 	height: 60px;	
 }
 
+
+#edit-mode {
+	background-color: black;
+	color: white;
+	display: flex;
+	height: 39px;
+	padding: 10px;
+	justify-content: center;
+	align-items: center;
+	gap: 9px;
+	min-width: 100vw;
+	position: relative;
+	left: calc(-50vw + 50%);
+}
+
+#edit-mode button {
+	border-radius: 60px;
+	background-color: white;
+	height: 39px;
+	padding: 11px 23px;
+	border: none;
+	margin-left: 12px;
+}
+
+.error-message {
+	color: red;
+	margin-top: 20px ;
+}
+
+.modify-button {
+	height: 18px;
+	width: 18px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: 57px;
+}
+
+.modify-button a {
+	text-decoration: none;
+	color: black;
+}
+
+.hide {
+	display: none !important;
+}
+
+.show {
+	display: block;
+}
+
+#portfolio-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 51px;
+}
+
+dialog {
+	border-radius: 10px;
+	border: none;
+	width: 558px;
+	padding: 32px 36px;
+}
+
+dialog::backdrop {
+	background: rgba(0, 0, 0, 0.3);
+}
+
+dialog #close-modal {
+	float: right;
+}
+
+.modal-content {
+	padding: 28px 69px;
+	display: flex;
+	flex-direction: column;
+}
+
+dialog h2 {
+	color:black;
+	font-family: 'Work Sans';
+	font-weight: 400;
+	font-size: 26px;
+	margin: 0px auto 46px auto;	
+}
+
+.edit-gallery {
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 6.3px; 
+	grid-row-gap: 10.5px;
+}
+
+.edit-gallery img {
+	height: 104px;
+}
+
+hr {
+	border: 1px solid #B3B3B3;
+	width: 100%;
+	margin: 47px auto 31px auto;
+}
+
+.modal-content button {
+	margin:auto;
+}
+
+.modal-content span {
+	margin: 23px auto 0px auto;
+	color: #D65353;
+	font-family: 'Syne';
+	font-weight: 400;
+	font-size: 14px;
+	font-style: normal;
+}
+
+.edit-icons {
+	position: relative;
+}
+.bin-icon, .move-icon {
+	position:absolute;
+	width: 17px;
+	bottom: 55px;
+}
+
+.bin-icon {
+	right: 5px;
+}
+
+.move-icon {
+	right: 25px;
+	opacity: 0;
+
+}
+
+figure:hover .move-icon {
+	opacity:1;
+}
+
+.add-image-wrapper {
+	background-color: #E8F1F7;
+	display:flex;
+	flex-direction: column;
+	padding: 18px 120px;
+}
+
+.add-image-wrapper img {
+	height: 46px;
+	padding-top: 10px;
+	margin: auto;
+}
+
+.add-image-wrapper button {
+	margin: 21px auto 7px auto;
+	background: #CBD6DC;
+	border-radius: 50px;
+	border: none;
+	padding: 10px 33px;
+	color: #306685;
+}
+
+.add-image-wrapper p {
+	font-weight: 400;
+	font-size: 10px;
+	color: #444444;
+	margin: auto;
+}
