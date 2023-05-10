@@ -22,18 +22,18 @@
 	<nav>
 		<ul>
 			<li><a href="index.html">projets</a></li>
-			<li>contact</li>
+			<li><a href="">contact</a></li>
 			<li id="login"><a href="pages/pagelogin.html">login</a></li>
-			<li id="logout" class="hide">logout</li>
+			<li id="logout" class="hide"><a href="">logout</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
 <main>
 	<dialog id="modal-gallery">
-		<img src="./assets/icons/closeicon.svg" alt="close-icon" id="close-modal" type="button">
-		<!-- <span class="close">&times;</span> other option for close button-->
-		<div id="modal-first-page" class="hide">
+		<div id="modal-first-page" class="">
+			<img src="./assets/icons/closeicon.svg" alt="close-icon" id="close-modal" type="button">
+			<!-- <span class="close">&times;</span> other option for close button-->
 			<div class="modal-content">
 				<h2>Galerie photo</h2>
 				<div class="edit-gallery" type="modal">
@@ -43,12 +43,16 @@
 				<span>Supprimer la galerie</span>
 			</div>
 		</div>
-		<div id="modal-second-page" class="">
+		<div id="modal-second-page" class="hide">
+			<img src="./assets/icons/arrowicon.svg" alt="back-arrow-icon" id="back-arrow" type="button">
+			<img src="./assets/icons/closeicon.svg" alt="close-icon" id="close-modal" type="button">
 			<div class="modal-content">
 				<h2>Ajout photo</h2>
 				<div class="add-image-wrapper">
-					<img src="./assets/icons/pictureicon.svg" alt="picture-icon">
-					<button type="file">+ Ajouter photo</button>
+					<img src="" id="new-image" class="hide">
+					<img src="./assets/icons/pictureicon.svg" alt="picture-icon" id="picture-icon">
+					<label for="input-file">+ Ajouter photo</label>
+					<input type="file" accept="image/jpg, image/png" id="input-file" class="hide"></input>
 					<p>jpg, png: 4mo max</p>
 				</div>
 				<form id="add-image-form">

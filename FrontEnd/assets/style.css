@@ -412,6 +412,7 @@ figure:hover .move-icon {
 	display:flex;
 	flex-direction: column;
 	padding: 18px 120px;
+	max-height: 170px;
 }
 
 .add-image-wrapper img {
@@ -420,7 +421,7 @@ figure:hover .move-icon {
 	margin: auto;
 }
 
-.add-image-wrapper button {
+.add-image-wrapper label {
 	margin: 21px auto 7px auto;
 	background: #CBD6DC;
 	border-radius: 50px;
@@ -435,3 +436,20 @@ figure:hover .move-icon {
 	color: #444444;
 	margin: auto;
 }
+
+#new-image {
+	height: 170px;
+	padding: 0 !important;
+
+}
+
+#category, #titre {
+	font-weight: 400;
+	font-size: 14px;
+	font-family: 'Work Sans';
+	color: #444444;
+	padding: 0px 21px 0px 16px;
+	
+
+}
+

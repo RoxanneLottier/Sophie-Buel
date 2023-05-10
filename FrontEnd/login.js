@@ -44,3 +44,5 @@ const logInForm = document.querySelector("#login-inputs");
           .catch(error => console.log(error));
 
     });
+
+    // CLICK TO LOGOUT
