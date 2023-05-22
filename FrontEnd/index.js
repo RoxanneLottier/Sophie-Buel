@@ -85,31 +85,39 @@ fetch('http://localhost:5678/api/works')
     .catch(error => console.log(error));
 
  // CREATE FILTER BUTTONS
+
  const buttonSection = document.querySelector('.filters');
 
- // fetch the catgories in the API
- fetch('http://localhost:5678/api/categories')
-    .then(response => response.json())
-    .then( 
-        function createButtons (buttons) {
+ function createButtonSection() {
 
-            for (let j=0; j < buttons.length; j++) {
+    // fetch the catgories in the API
+    fetch('http://localhost:5678/api/categories')
+        .then(response => response.json())
+        .then( 
+            function createButtons (buttons) {
 
-                // Create Template for the buttons
-                const template = document.querySelector("#button-filter");
+                for (let j=0; j < buttons.length; j++) {
 
-                // Clone template for each category in the API
-                const clone = template.content.cloneNode(true);
-                var el = clone.querySelector("button");
-                el.innerText=buttons[j].name;
-                el.dataset.filter=buttons[j].name;
-                buttonSection.appendChild(clone);
+                    // Create Template for the buttons
+                    const template = document.querySelector("#button-filter");
+
+                    // Clone template for each category in the API
+                    const clone = template.content.cloneNode(true);
+                    var el = clone.querySelector("button");
+                    el.innerText=buttons[j].name;
+                    el.dataset.filter=buttons[j].name;
+                    buttonSection.appendChild(clone);
+                    }
                 }
-            }
-    )
-    .catch(error => console.log(error));
+        )
+        .catch(error => console.log(error));
+}
+
+createButtonSection();
 
 // CREATE FILTER FOR BUTTONS
+
+function filterButtons() {
 
     buttonSection.addEventListener("click", (event) => {
         const el = event.target;
@@ -143,6 +151,9 @@ fetch('http://localhost:5678/api/works')
         }
 
         );
+}
+
+filterButtons();
 
 // Change page to edit page if Token is in sessionStorage
 const modifyButtons = document.querySelectorAll('.modify-button');
@@ -173,41 +184,47 @@ function editPage () {
 
 editPage();
 
-// Create Modal
-
+// Modal elements
 const modal = document.querySelector('#modal-gallery');
 const modalFirstPage = document.querySelector('#modal-first-page');
 const modalSecondPage = document.querySelector('#modal-second-page');
 
 // open modal and show first page
 function openModal() {
-const portfolioModifyHeader = document.querySelector('#portfolio-title')
-console.log(portfolioModifyHeader);
+    const portfolioModifyHeader = document.querySelector('#portfolio-title')
 
-portfolioModifyHeader.addEventListener('click', (event) => {
-    if (event.target.matches("a") || event.target.matches("img")) {
-        event.preventDefault();
-        modal.showModal();
-        modalFirstPage.classList.remove("hide");
-        modalSecondPage.classList.add("hide");
+    portfolioModifyHeader.addEventListener('click', (event) => {
+        if (event.target.matches("a") || event.target.matches("img")) {
+            event.preventDefault();
+            modal.showModal();
+            modalFirstPage.classList.remove("hide");
+            modalSecondPage.classList.add("hide");
+        }
+
+    })
     }
-
-})
-}
 
 openModal();
 
 // Close modal with X icon
-const closeButton = document.querySelectorAll('#close-modal');
 
-closeButton.forEach(button => {
-    button.addEventListener("click", () => {
-    modal.close();
+function closeModal() {
+    const closeButton = document.querySelectorAll('#close-modal');
+
+    closeButton.forEach(button => {
+        button.addEventListener("click", () => {
+        modal.close();
+        // refresh page so that form is refreshed
+        location.reload();
+        })
     })
-})
+}
 
+closeModal();
 
 // open modal second page
+
+function changesPagesInModal() {
 
     // Open second page with add new image button
     const addImageButton = document.querySelector('#add-image-button');
@@ -227,7 +244,13 @@ closeButton.forEach(button => {
         modalSecondPage.classList.toggle("hide");
     })
 
+}
+
+changesPagesInModal();
+
     // close modal when clicking outside the dialog
+
+function closeModalOnBackdropClick() {
 
     modal.addEventListener("click", e => {
         const dialogDimensions = modal.getBoundingClientRect()
@@ -238,11 +261,16 @@ closeButton.forEach(button => {
           e.clientY > dialogDimensions.bottom
         ) {
           modal.close()
+          // refresh page on modal close to refresh form
+          location.reload();
         }
       })
+}
 
+closeModalOnBackdropClick();
 
 // ADD CATEGORIE OPTIONS IN SELECT INPUT ON MODAL
+function selectCategories() {
 fetch('http://localhost:5678/api/categories')
     .then(response => response.json())
     .then( 
@@ -259,144 +287,158 @@ fetch('http://localhost:5678/api/categories')
         }
     )
     .catch(error => console.log(error));
-
+}
+selectCategories();
 
 // DELETE WORKS IN MODAL & MAIN GALLERY
 
-const editGallery = document.querySelector('.edit-gallery');
-
+function deleteWorks() {
+    const editGallery = document.querySelector('.edit-gallery');
 
 // add listener on modal gallery
-editGallery.addEventListener('click', (event) => {
-    event.preventDefault();
-    // const modalFigures = document.querySelectorAll('.edit-gallery figure');
-    const galleryFigures = document.querySelectorAll('[data-category]');
-    // console.log(galleryFigures);
+    editGallery.addEventListener('click', (event) => {
+        event.preventDefault();
+        // const modalFigures = document.querySelectorAll('.edit-gallery figure');
+        const galleryFigures = document.querySelectorAll('[data-category]');
+        // console.log(galleryFigures);
 
-    // Use bubble effect to reach Figure from bin icon
-    const modalBinIcon = event.target;
-    const modalDiv = modalBinIcon.parentNode;
-    const modalFigure = modalDiv.parentNode;
-    const modalEditGallery = modalFigure.parentNode;
+        // Use bubble effect to reach Figure from bin icon
+        const modalBinIcon = event.target;
+        const modalDiv = modalBinIcon.parentNode;
+        const modalFigure = modalDiv.parentNode;
+        const modalEditGallery = modalFigure.parentNode;
 
-    // if click is on bin icon then remove figure
-    if (event.target.matches(".bin-icon")) {
-        
-        modalEditGallery.removeChild(modalFigure);
+        // if click is on bin icon then remove figure
+        if (event.target.matches(".bin-icon")) {
+            
+            modalEditGallery.removeChild(modalFigure);
 
-        
-        for(let i = 0; i < galleryFigures.length; i++) {
-                if (modalFigure.dataset.id === galleryFigures[i].dataset.id) {
-                    galleryFigures[i].remove();
+            
+            for(let i = 0; i < galleryFigures.length; i++) {
+                    if (modalFigure.dataset.id === galleryFigures[i].dataset.id) {
+                        galleryFigures[i].remove();
 
-                 // DELETE WORKS ON API
-                fetch(`http://localhost:5678/api/works/${modalFigure.dataset.id}`, {
-                method: 'DELETE',
-                headers: {
-                    accept: "*/*",
-                    Authorization: "Bearer " + sessionStorage.token,
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Work deleted successfully');
-                    } else {
-                        console.log('Error while deleting work')
-                    }
+                    // DELETE WORKS ON API
+                    fetch(`http://localhost:5678/api/works/${modalFigure.dataset.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        accept: "*/*",
+                        Authorization: "Bearer " + sessionStorage.token,
+                        }
                     })
-                .then ( data => console.log(data))
-                .catch(error => console.log(error));
-                }
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Work deleted successfully');
+                        } else {
+                            console.log('Error while deleting work')
+                        }
+                        })
+                    .then ( data => console.log(data))
+                    .catch(error => console.log(error));
+                    }
 
-            }
-    }
-})
+                }
+        }
+    })
+}
+
+deleteWorks();
 
 // ADD NEW IMAGE ON MODAL 
 // when new image is added modal closes and new images is added to the main page via the API.
-
 const newWorkImage = document.querySelector('#new-image');
 const inputFile = document.querySelector('#input-file');
 
-// listener on File input
-inputFile.addEventListener('change', function () {
+function addImageForm() {
 
-    // Reach image icons that need to be hidden
-    const pictureIcon = document.querySelector('#picture-icon');
-    const inputFileLabel = document.querySelector('.add-image-wrapper label');
-    const notations = document.querySelector('.add-image-wrapper p');
-    const addImageWrapper = document.querySelector('.add-image-wrapper');
+    // listener on File input
+    inputFile.addEventListener('change', function () {
 
-    // // ONE WAY TO DO IT WITH FILE READER 
+        // Reach image icons that need to be hidden
+        const pictureIcon = document.querySelector('#picture-icon');
+        const inputFileLabel = document.querySelector('.add-image-wrapper label');
+        const notations = document.querySelector('.add-image-wrapper p');
+        const addImageWrapper = document.querySelector('.add-image-wrapper');
 
-    // var reader = new FileReader();
-    // console.log(reader);
-    // reader.addEventListener('load', (event) => {
-    //     newWorkImage.src = event.target.result;
-    // });
-    //     reader.readAsDataURL(inputFile.files[0]);
+        // // ONE WAY TO DO IT WITH FILE READER 
 
-    // OTHER WAY TO DO IT
+        // var reader = new FileReader();
+        // console.log(reader);
+        // reader.addEventListener('load', (event) => {
+        //     newWorkImage.src = event.target.result;
+        // });
+        //     reader.readAsDataURL(inputFile.files[0]);
 
-    newWorkImage.src = URL.createObjectURL(inputFile.files[0]);
-    newWorkImage.dataset.fileName = inputFile.files[0].name;
+        // OTHER WAY TO DO IT
 
-    // show image
-    newWorkImage.classList.remove('hide');
+        newWorkImage.src = URL.createObjectURL(inputFile.files[0]);
+        newWorkImage.dataset.fileName = inputFile.files[0].name;
 
-    // hide all the other elements in the add image wrapper
-    newWorkImage.classList.add('image-is-here');
-    pictureIcon.classList.add('hide');
-    inputFileLabel.classList.add('hide');
-    notations.classList.add('hide');
-    addImageWrapper.style.padding = "0";
-});
+        // show image
+        newWorkImage.classList.remove('hide');
 
+        // hide all the other elements in the add image wrapper
+        newWorkImage.classList.add('image-is-here');
+        pictureIcon.classList.add('hide');
+        inputFileLabel.classList.add('hide');
+        notations.classList.add('hide');
+        addImageWrapper.style.padding = "0";
+    });
+}
+
+addImageForm();
 // NEW WAY TEST ///////
-const addImageForm = document.querySelector('#add-image-form');
-console.log(addImageForm);
 
-addImageForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    //Image data
-    const imageFile = inputFile.files[0];
-    console.log(imageFile);
-    const imageFileName = inputFile.files[0].name;
-    console.log(imageFileName);
+function addWorksToAPI() {
+    const addImageForm = document.querySelector('#add-image-form');
 
-    // title data
-    const titleInputValue = document.querySelector('#titre').value
+    addImageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        //Image data
+        const imageFile = inputFile.files[0];
+        console.log(imageFile);
+        const imageFileName = inputFile.files[0].name;
+        console.log(imageFileName);
 
-    // Category data
-    const categorySelected = document.querySelector('select').value;
+        // title data
+        const titleInputValue = document.querySelector('#titre').value
 
-    //Form data
-    const formData = new FormData();
-    formData.append('image', imageFile, imageFileName);
-    formData.append('title', titleInputValue);
-    formData.append('category', categorySelected);
+        // Category data
+        const categorySelected = document.querySelector('select').value;
 
-    //Fetch
-    fetch('http://localhost:5678/api/works', {
-        method: "POST",
-        body: formData,
-        headers: {
-            accept: "application/json",
-            Authorization: "Bearer " + sessionStorage.token,
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            modal.close();
-            location.reload();
-            console.log('Work added successfully');
-        } else {
-            console.log('Error while adding work');
-        }
+        //Form data
+        const formData = new FormData();
+        formData.append('image', imageFile, imageFileName);
+        formData.append('title', titleInputValue);
+        formData.append('category', categorySelected);
+
+        //Fetch
+        fetch('http://localhost:5678/api/works', {
+            method: "POST",
+            body: formData,
+            headers: {
+                accept: "application/json",
+                Authorization: "Bearer " + sessionStorage.token,
+            }
         })
-    .then ( data => console.log(data))
-    .catch(error => console.log(error));
-} )
+        .then(response => {
+            if (response.ok) {
+                modal.close();
+                location.reload();
+                console.log('Work added successfully');
+            } else {
+                console.log('Error while adding work');
+                const errorMessage = document.querySelector(".error-message");
+                errorMessage.classList.remove("hide");
+            }
+            })
+        .then ( data => console.log(data))
+        .catch(error => console.log(error));
+    })
+}
+
+addWorksToAPI();
+
 // END NEW WAY TEST WORKS !!!!!!!!!!!!!!
 
 
