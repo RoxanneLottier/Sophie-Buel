@@ -48,14 +48,15 @@
 			<img src="./assets/icons/closeicon.svg" alt="close-icon" id="close-modal" type="button">
 			<div class="modal-content">
 				<h2>Ajout photo</h2>
-				<div class="add-image-wrapper">
-					<img src="" id="new-image" class="hide">
-					<img src="./assets/icons/pictureicon.svg" alt="picture-icon" id="picture-icon">
-					<label for="input-file">+ Ajouter photo</label>
-					<input type="file" accept="image/jpg, image/png" id="input-file" class="hide"></input>
-					<p>jpg, png: 4mo max</p>
-				</div>
 				<form id="add-image-form">
+					<div class="add-image-wrapper">
+						<img src="" id="new-image" class="hide">
+						<img src="./assets/icons/pictureicon.svg" alt="picture-icon" id="picture-icon">
+						<label for="input-file">+ Ajouter photo</label>
+						<input type="file" accept="image/jpg, image/png" id="input-file" class="hide"></input>
+						<p>jpg, png: 4mo max</p>
+					</div>
+
 					<label for="titre">Titre</label>
 					<input type="text" name="titre" id="titre">
 	
@@ -65,7 +66,7 @@
 						<option value="objets">Objects</option> -->
 					</select>
 					<hr>
-					<button type="submit" class="submit-button">Valider</button>
+					<button type="submit" class="submit-button" id="validate-add-image-button">Valider</button>
 				</form>
 			</div>
 		</div>
