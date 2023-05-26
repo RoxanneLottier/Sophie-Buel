@@ -8,7 +8,7 @@ function login() {
   logInForm.addEventListener("submit", event => {
       event.preventDefault();
 
-      const formData = new FormData(logInForm); 
+      const formData = new FormData(logInForm);
 
       const data = Object.fromEntries(formData);
       console.log(data);
