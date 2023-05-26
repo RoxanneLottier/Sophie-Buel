@@ -9,13 +9,12 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script type="module" src="index.js"></script>
 </head>
 <body>
 	<div id="edit-mode" class="hide">
 		<img src="./assets/icons/editicon.svg" alt="edit">
 		<p>Mode édition</p>
-		<button type="submit">publier les changements</button>
+		<button type="button">publier les changements</button>
 	</div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
@@ -58,12 +57,11 @@
 					</div>
 
 					<label for="titre">Titre</label>
-					<input type="text" name="titre" id="titre">
-	
+					<input type="text" name="titre" id="titre" minlength="1">
+
 					<label for="category">Catégorie</label>
-					<select id="category" name="category">
-						<!-- Write the options here with api
-						<option value="objets">Objects</option> -->
+					<select id="category" name="category" minlenght="1">
+						<option value=""></option>
 					</select>
 					<span class="error-message hide">Erreur il manque des informations afin d'enregister un nouveau travail.</span>
 					<hr>
@@ -128,5 +126,6 @@
 		</ul>
 	</nav>
 </footer>
+<script type="module" src="index.js"></script>
 </body>
 </html>

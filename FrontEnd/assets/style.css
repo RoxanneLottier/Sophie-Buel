@@ -264,7 +264,7 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em;
-	height: 60px;	
+	height: 60px;
 }
 
 
@@ -351,13 +351,13 @@ dialog h2 {
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 26px;
-	margin: 0px auto 46px auto;	
+	margin: 0px auto 46px auto;
 }
 
 .edit-gallery {
 	display:grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	grid-column-gap: 6.3px; 
+	grid-column-gap: 6.3px;
 	grid-row-gap: 10.5px;
 }
 
@@ -449,7 +449,5 @@ figure:hover .move-icon {
 	font-family: 'Work Sans';
 	color: #444444;
 	padding: 0px 21px 0px 16px;
-	
-
 }
 
