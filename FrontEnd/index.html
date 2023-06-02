@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
-	<div id="edit-mode" class="hide">
+	<div id="edit-mode" class="edit-mode hide">
 		<img src="./assets/icons/editicon.svg" alt="edit">
 		<p>Mode édition</p>
 		<button type="button">publier les changements</button>
@@ -21,9 +21,9 @@
 	<nav>
 		<ul>
 			<li><a href="index.html">projets</a></li>
-			<li><a href="">contact</a></li>
+			<li>contact</li>
 			<li id="login"><a href="pages/pagelogin.html">login</a></li>
-			<li id="logout" class="hide"><a href="">logout</a></li>
+			<li id="logout" class="hide">logout</li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -74,8 +74,8 @@
 		<figure>
 			<img id="designer-image" src="./assets/images/sophie-bluel.png" alt="">
 			<figcaption class="modify-button hide">
-				<a href=""><img src="./assets/icons/editiconblack.svg" alt="edit"></a>
-				<a href="">modifier</a>
+				<img src="./assets/icons/editiconblack.svg" alt="edit">
+				<p>modifier</p>
 			</figcaption>
 		</figure>
 		<article>
@@ -86,11 +86,11 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<div id="portfolio-title">
+		<div class="portfolio-title" id="portfolio-title">
 		<h2>Mes Projets</h2>
-		<div class="modify-button hide">
-			<a href=""><img src="./assets/icons/editiconblack.svg" alt="edit"></a>
-			<a href="">modifier</a>
+		<div class="modify-button hide" id="open-modal">
+			<img src="./assets/icons/editiconblack.svg" alt="edit">
+			<p>modifier</p>
 		</div>
 		</div>
 		<div class="filters">

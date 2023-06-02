@@ -2,19 +2,15 @@
 fetch("http://localhost:5678/api/works")
     .then((response) => response.json())
     .then(
-
         function loadWorksGallery(works) {
-
             const sectionGallery = document.querySelector(".gallery");
 
             for (let i=0; i < works.length; i++) {
                 const work = works[i];
 
-                // Création des balises
+                // Creating elements in the DOM
                 const workElement = document.createElement("figure");
-
-                // adding a category and an id dataset
-                workElement.dataset.category = work.category.name;
+                workElement.dataset.category = work.category.name; // adding a category and an id dataset
                 workElement.dataset.id = work.id;
 
                 const imageElement = document.createElement("img");
@@ -25,31 +21,24 @@ fetch("http://localhost:5678/api/works")
                 // linking chilren elements to parent element
                 workElement.appendChild(imageElement);
                 workElement.appendChild(captionElement);
-
                 sectionGallery.appendChild(workElement);
-
             }
         })
     .catch(error => console.log(error));
 
 // UPLOAD WORKS ON MODAL
-
     fetch("http://localhost:5678/api/works")
     .then(response => response.json())
     .then(
-
         function loadWorksModal(works) {
-
             const modalGallery = document.querySelector(".edit-gallery")
             for (let i=0; i < works.length; i++) {
 
                 const work = works[i];
 
-                // Création des balises
+                //Creating elements in the DOM
                 const workElement = document.createElement("figure");
-
-                // adding id dataset
-                workElement.dataset.id = work.id;
+                workElement.dataset.id = work.id; // adding id dataset
 
                 const imageElement = document.createElement("img");
                 imageElement.src = work.imageUrl;
@@ -76,16 +65,81 @@ fetch("http://localhost:5678/api/works")
                 workElement.appendChild(editElements);
                 editElements.appendChild(binIconElement);
                 editElements.appendChild(moveIconElement);
-
                 modalGallery.appendChild(workElement);
-
             }
 
         })
     .catch(error => console.log(error));
 
- // CREATE FILTER BUTTONS
+// UTILITY FUNCTIONS
 
+/*
+assert giving a condition return and erreor message if condition fail
+*/
+const assert = function (condition, errorMessage, ErrorType = Error) {
+    if (!condition) throw new ErrorType(errorMessage);
+  }
+
+//Function that checks if element is and HTML element
+function isElement(element) {
+    return element instanceof Element;
+}
+
+// MAIN FUNCTION THAT RUNS ALL THE FUNCTIONS (with explanation) (functions that are not linked to eventlisteners)
+
+function main () {
+    createButtonSection(); // Function to create the buttons in filter bar
+    showEditPage(); // Function to show the edit page once loged in
+}
+main();
+
+// ALL CLICK EVENT LISTENER ON PAGE
+document.addEventListener("click", (event) => {
+    console.log(event.target);
+    if (event.target.matches(".portfolio-title .modify-button p") || event.target.matches(".portfolio-title .modify-button img") ) {
+        event.preventDefault();
+        openModal(); // function that open modal
+    }
+    if (event.target.matches("#close-modal")) {
+        closeModal(); // function that closes modal
+    }
+    if (event.target.matches("#modal-gallery")) {
+        closeModalOnBackdropClick (event) // function that closes modal when clicking the backdrop
+    }
+    if (event.target.matches("#add-image-button")) {
+        showModalSecondPage(); // function that hides page1 of modal and shows page 2
+    }
+    if (event.target.matches("#back-arrow")) {
+        showModalFirstPage(); // function the hides page 2 of modal and shows page 1
+    }
+    // REFRESH PAGE ON CLICK OF PUBLISH BUTTON ON TOP OF THE EDIT PAGE (AESTHETIC BUTTON)
+    if (event.target.matches(".edit-mode button")) {
+        location.reload();
+    }
+    if (event.target.matches("#logout")) {
+        logout(); // function that logs out of edit mode
+    }
+    if (event.target.matches(".filters button")) {
+        activefilterButtons(event); // function that activates button when clicked for filter by changing style to green
+        filterButtons(event); // function the uses the buttons to filter the gallery
+    }
+    if (event.target.matches(".bin-icon")) {
+        deleteWorks(event);
+        // function the englobes 3 functions, delete work in modal, delete work in gallery and delete work in API
+    }
+})
+
+// ALL SUBMIT EVENT LISTENER ON PAGE
+document.addEventListener("submit", (event) => {
+    if (event.target.matches("#add-image-form")){
+        event.preventDefault();
+        addWorksToAPI(); // function that adds works to API
+    }
+})
+
+///ALL THE FUNCTIONS IN THE PAGE !!!!!!!
+
+ // CREATE FILTER BUTTONS WITH CALL TO API
  function createButtonSection() {
     const buttonSection = document.querySelector(".filters");
 
@@ -105,79 +159,81 @@ fetch("http://localhost:5678/api/works")
                     el.innerText=buttons[j].name;
                     el.dataset.filter=buttons[j].name;
                     buttonSection.appendChild(clone);
-                    }
                 }
+            }
         )
         .catch(error => console.log(error));
 }
 
-createButtonSection();
+// MAKE BUTTON ACTIVE WHEN FILTERED
+function activefilterButtons(event) {
 
-// CREATE FILTER FOR BUTTONS
+    const element = event.target; // define target
 
-function filterButtons() {
-    const buttonSection = document.querySelector(".filters");
+    // define target that has active class
+    const currentActiveElement = document.querySelectorAll(".active");
 
-    buttonSection.addEventListener("click", (event) => {
-        const el = event.target;
+    // Remove active on "tous" which is on by default when page is loaded
+    currentActiveElement.forEach (element => {
+        element.classList.remove("active");
+    });
+    // toggle active on the selected button
+    element.classList.toggle("active");
 
-        // Change Active status on buttons when selected
-        const currentActiveEl = document.querySelectorAll(".active");
-
-        // Remove active on "tous" which is on by default when page is loaded
-        currentActiveEl.forEach (el => {
-            el.classList.remove("active");
-        });
-        // toggle active on the selected button
-        el.classList.toggle("active");
-
-        // add filter on dataset category of buttons
-        const filter = el.dataset.filter;
-
-        const allFigures = document.querySelectorAll("[data-category]");
-        const show = document.querySelectorAll(`[data-category="${filter}"]`);
-
-        allFigures.forEach(e => {
-            e.style.display = "none";
-            if(filter === "tous") {
-                allFigures.forEach(e => {
-                    e.style.display = "block";
-                });
-            }
-        });
-
-        show.forEach(e => {
-            e.style.display = "block";
-        });
-        }
-
-        );
 }
 
-filterButtons();
+// FILTER BUTTONS
 
-// Create edit page
+function filterButtons(event) {
 
+    const element = event.target; // define target
+
+    // add filter method on dataset of buttons
+    const filter = element.dataset.filter;
+
+    // Reach all the figures
+    const allFigures = document.querySelectorAll("[data-category]");
+
+    // create constante with selected filter
+    const filteredFigures = document.querySelectorAll(`[data-category="${filter}"]`);
+
+    allFigures.forEach(figure => {
+        figure.style.display = "none"; // Hide all figures
+        if(filter === "tous") { //if filter is "tous" unhide all figures
+            allFigures.forEach(figure => {
+                figure.style.display = "block";
+            });
+        }
+    });
+
+    // show figures that are filtered
+    filteredFigures.forEach(figure => {
+        figure.style.display = "block";
+    });
+}
+
+// CREATE EDIT PAGE
 function createEditPage () {
-    const buttonSection = document.querySelector(".filters");
-    const modifyButtons = document.querySelectorAll(".modify-button");
-
-    //edit mode graphics
-    const editBar = document.querySelector("#edit-mode");
-    const logoutButton = document.querySelector("#logout");
-    const loginButton = document.querySelector("#login");
-
-    editBar.classList.remove("hide");
-    logoutButton.classList.remove("hide");
+    // Remove login & filter bar
+    const loginButton = document.querySelector("#login"); // login button
+    const buttonSection = document.querySelector(".filters"); // Filter bar
     loginButton.classList.add("hide");
     buttonSection.classList.add("hide");
+
+    //Add edit mode graphics
+    const modifyButtons = document.querySelectorAll(".modify-button"); // Modifer buttons
+    const editBar = document.querySelector("#edit-mode"); // Black edit bar on top
+    const logoutButton = document.querySelector("#logout"); // logout button
+    loginButton.classList.add("hide");
+    buttonSection.classList.add("hide");
+    editBar.classList.remove("hide");
+    logoutButton.classList.remove("hide");
     modifyButtons.forEach(button => {
         button.classList.remove("hide");
     })
-
 };
 
-// Show edit page if token is in session storage
+// SHOW EDIT PAGE WHEN TOKEN IS IN STORAGE
 function showEditPage () {
     if (sessionStorage.getItem("token") !== null) {
         console.log(sessionStorage.token);
@@ -186,107 +242,113 @@ function showEditPage () {
         console.log('Authentification error, token not found')
     }
 }
-showEditPage();
 
-function showModalFirstPage() {
-    const modalFirstPage = document.querySelector("#modal-first-page");
-    const modalSecondPage = document.querySelector("#modal-second-page");
-
-    modalFirstPage.classList.remove("hide");
-    modalSecondPage.classList.add("hide");
-
+// OPEN MODAL & SHOW FIRST PAGE
+function openModal () {
+    const modal = document.querySelector("#modal-gallery");
+    try {
+        assert(
+            isElement(modal) === true
+            , "Error modal element is not part of the DOM"
+            , TypeError
+            );
+    //open modal
+    modal.showModal();
+    //Show first page
+    showModalFirstPage();
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
-
-// open modal and show first page
-function openModal() {
-    const portfolioModifyHeader = document.querySelector("#portfolio-title")
-    const modal = document.querySelector("#modal-gallery");
-
-    portfolioModifyHeader.addEventListener("click", (event) => {
-        if (event.target.matches("a") || event.target.matches("img")) {
-            event.preventDefault();
-            modal.showModal();
-            showModalFirstPage();
-        }
-    })
-    }
-
-openModal();
-
-// Close modal with X icon
-
+// CLOSE MODAL WITH X ICON
 function closeModal() {
-    const closeButton = document.querySelectorAll("#close-modal");
     const modal = document.querySelector("#modal-gallery");
-
-    closeButton.forEach(button => {
-        button.addEventListener("click", () => {
+    try {
+        assert(
+            isElement(modal) === true
+            , "Error modal element is not part of the DOM"
+            , TypeError
+            );
+        //close modal
         modal.close();
         // reset form
         resetAddImageForm();
         // reset error message
         const errorMessage = document.querySelector(".error-message");
         errorMessage ? errorMessage.classList.add("hide") : errorMessage.classList.remove("hide");
-        })
-    })
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
-closeModal();
-
-// open modal second page
-
-function changePagesInModal() {
-
-    // Open second page with add new image button
-    const addImageButton = document.querySelector("#add-image-button");
-
-    addImageButton.addEventListener("click", () => {
-    const modalFirstPage = document.querySelector("#modal-first-page");
-    const modalSecondPage = document.querySelector("#modal-second-page");
-
-    modalFirstPage.classList.add("hide");
-    modalSecondPage.classList.remove("hide");
-
-    })
-
-    // go back to first page with arrow icon
-    const backArrowButton = document.querySelector("#back-arrow");
-
-    backArrowButton.addEventListener("click", () => {
-        showModalFirstPage();
-    })
-
-}
-
-changePagesInModal();
-
-    // close modal when clicking outside the dialog
-
-function closeModalOnBackdropClick() {
+// CLOSE MODAL ON BACKDROP CLICK
+function closeModalOnBackdropClick (event) {
 
     const modal = document.querySelector("#modal-gallery");
-
-    modal.addEventListener("click", e => {
+    try {
+        assert(
+            isElement(modal) === true
+            , "Error modal element is not part of the DOM"
+            , TypeError
+            );
         const dialogDimensions = modal.getBoundingClientRect()
+
         if (
-          e.clientX < dialogDimensions.left ||
-          e.clientX > dialogDimensions.right ||
-          e.clientY < dialogDimensions.top ||
-          e.clientY > dialogDimensions.bottom
+            event.clientX < dialogDimensions.left ||
+            event.clientX > dialogDimensions.right ||
+            event.clientY < dialogDimensions.top ||
+            event.clientY > dialogDimensions.bottom
         ) {
-          modal.close()
-          // refresh page on modal close to refresh form
-        //   location.reload();
+            modal.close()
+            // Reset form
         resetAddImageForm();
         // reset error message
         const errorMessage = document.querySelector(".error-message");
         errorMessage ? errorMessage.classList.add("hide") : errorMessage.classList.remove("hide");
         }
-      })
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
-closeModalOnBackdropClick();
+// OPEN MODAL PAGE 1
+function showModalFirstPage() {
+    const modalFirstPage = document.querySelector("#modal-first-page");
+    const modalSecondPage = document.querySelector("#modal-second-page");
+
+    try {
+        assert(
+            isElement(modalFirstPage) === true && isElement(modalSecondPage) === true
+            , "Error on or more element/s is/are not part of the DOM"
+            , TypeError
+            );
+        modalFirstPage.classList.remove("hide");
+        modalSecondPage.classList.add("hide");
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// OPEN MODAL PAGE 2
+function showModalSecondPage() {
+    const modalFirstPage = document.querySelector("#modal-first-page");
+    const modalSecondPage = document.querySelector("#modal-second-page");
+
+    try {
+        assert(
+            isElement(modalFirstPage) === true && isElement(modalSecondPage) === true
+            , "Cannot show second page of modal, element/s is/are not part of the DOM"
+            , TypeError
+            );
+        modalFirstPage.classList.add("hide");
+        modalSecondPage.classList.remove("hide");
+        addImage(); // Function that add Image File in the image Form and displays it
+        selectCategories(); // Function that generates the categories in the image Form in the modal
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 // ADD CATEGORIE OPTIONS IN SELECT INPUT ON MODAL
 function selectCategories() {
@@ -307,96 +369,89 @@ fetch("http://localhost:5678/api/categories")
     )
     .catch(error => console.log(error));
 }
-selectCategories();
 
-// DELETE WORKS IN MODAL & MAIN GALLERY
+// DELETE WORKS
+function deleteWorks(event){
+    let modalId;
 
-function deleteWorks() {
-    const editGallery = document.querySelector(".edit-gallery");
-
-// add listener on modal gallery
-    editGallery.addEventListener("click", (event) => {
-        event.preventDefault();
-        const galleryFigures = document.querySelectorAll("[data-category]");
-
-        // Use bubble effect to reach Figure from bin icon
+    function deleteWorksOnModal(event) {
         const modalBinIcon = event.target;
         const modalDiv = modalBinIcon.parentNode;
         const modalFigure = modalDiv.parentNode;
         const modalEditGallery = modalFigure.parentNode;
+        modalId = modalFigure.dataset.id
+        modalEditGallery.removeChild(modalFigure);
+    }
+    deleteWorksOnModal(event)
 
-        // if click is on bin icon then remove figure
-        if (event.target.matches(".bin-icon")) {
+    function deleteWorksOnGAllery() {
+        const galleryFigures = document.querySelectorAll("[data-category]");
 
-            // Remove figure in Modal
-            modalEditGallery.removeChild(modalFigure);
-
+        try {
+            assert(
+                isElement(galleryFigures) === true
+                , "Cannot delete work from gallery, galleryFigures element is not part of the DOM"
+                , TypeError
+                );
             for(let i = 0; i < galleryFigures.length; i++) {
-                    if (modalFigure.dataset.id === galleryFigures[i].dataset.id) {
-                         // Remove figure in main gallery
-                        galleryFigures[i].remove();
-
-                        // DELETE WORKS ON API
-                        fetch(`http://localhost:5678/api/works/${modalFigure.dataset.id}`, {
-                        method: "DELETE",
-                        headers: {
-                            accept: "*/*",
-                            Authorization: "Bearer " + sessionStorage.token,
-                            }
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                console.log("Work deleted successfully");
-                            } else {
-                                console.log("Error while deleting work")
-                            }
-                            })
-                        .then ( data => console.log(data))
-                        .catch(error => console.log(error));
-                        }
+                if(modalId === galleryFigures[i].dataset.id) {
+                    galleryFigures[i].remove();
                 }
+            }
+        } catch (error) {
+            console.log(error.message);
         }
-    })
+    }
+    deleteWorksOnGAllery();
+
+    function deleteWorksOnAPI() {
+        fetch(`http://localhost:5678/api/works/${modalId}`, {
+            method: "DELETE",
+            headers: {
+                accept: "*/*",
+                Authorization: "Bearer " + sessionStorage.token,
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Work deleted successfully");
+                } else {
+                    console.log("Error while deleting work")
+                }
+                })
+            .then ( data => console.log(data))
+            .catch(error => console.log(error));
+    }
+    deleteWorksOnAPI()
 }
 
-deleteWorks();
-
 // ADD NEW IMAGE ON MODAL
-// when new image is added modal closes and new images is added to the main page via the API.
-
-function addImageForm() {
+function addImage() {
     const newWorkImage = document.querySelector("#new-image");
     const inputFile = document.querySelector("#input-file");
 
-    // listener on File input
-    inputFile.addEventListener("change", function () {
+    try {
+        assert(
+        isElement(newWorkImage) === true && isElement(inputFile) === true
+        , "One or more element/s is/are not part of the DOM"
+        , TypeError
+        );
 
-        // // ONE WAY: WITH FILE READER
+        inputFile.addEventListener("change", function () {
 
-        // var reader = new FileReader();
-        // console.log(reader);
-        // reader.addEventListener('load', (event) => {
-        //     newWorkImage.src = event.target.result;
-        // });
-        //     reader.readAsDataURL(inputFile.files[0]);
+            newWorkImage.src = URL.createObjectURL(inputFile.files[0]);
+            newWorkImage.dataset.fileName = inputFile.files[0].name;
 
-        // OTHER WAY
+            newWorkImage.classList.remove("hide");  // show image
 
-        newWorkImage.src = URL.createObjectURL(inputFile.files[0]);
-        newWorkImage.dataset.fileName = inputFile.files[0].name;
-
-        // show image
-        newWorkImage.classList.remove("hide");
-        newWorkImage.classList.add("image-is-here");
-
-        // hide all the other elements in the add image wrapper
-        hideInputFile();
-    });
+            hideInputFile(); // hide all the other elements in the add image wrapper
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
-addImageForm();
-// NEW WAY TEST ///////
-
+// HIDES INPUT FILE
 function hideInputFile() {
     const pictureIcon = document.querySelector("#picture-icon");
     const inputFileLabel = document.querySelector(".add-image-wrapper label");
@@ -410,6 +465,7 @@ function hideInputFile() {
     addImageWrapper.style.padding = "0";
 };
 
+// SHOW INPUT FILE
 function showInputFile() {
     const newWorkImage = document.querySelector("#new-image");
     const pictureIcon = document.querySelector("#picture-icon");
@@ -424,30 +480,24 @@ function showInputFile() {
     addImageWrapper.style.padding = "18px 120px";
 };
 
+// ADD WORKS TO THE API
 function addWorksToAPI() {
-    const addImageForm = document.querySelector("#add-image-form");
     const inputFile = document.querySelector("#input-file");
-    const modal = document.querySelector("#modal-gallery");
 
-    addImageForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        //Image data
-        const imageFile = inputFile.files[0];
-        console.log(imageFile);
-        const imageFileName = inputFile.files[0]?.name; // .? making constante undifined when file is undefined (optional chaining operator)
-        console.log(imageFileName);
+    //Image data
+    const imageFile = inputFile.files[0];
+    const imageFileName = inputFile.files[0]?.name; // .? making constante undifined when file is undefined (optional chaining operator)
 
-        // title data
-        const titleInputValue = document.querySelector("#titre").value
+    // title data
+    const titleInputValue = document.querySelector("#titre").value
 
-        // Category data
-        const categorySelected = document.querySelector("select").value;
+    // Category data
+    const categorySelected = document.querySelector("select").value;
 
-        // try to create form data and send data and catch error if there is no image.
+    // try to create form data and send data and catch error if there is no image.
         // was not writting error message because could not find File Name.
 
         try {
-
             //Form data
             const formData = new FormData();
             formData.append("image", imageFile, imageFileName);
@@ -465,8 +515,8 @@ function addWorksToAPI() {
             })
             .then(response => {
                 if (response.ok) {
-                    modal.close();
-                    location.reload();
+                    closeModal();
+                    location.reload(); // reload page to see new works on page
                     console.log("Work added successfully");
                 } else {
                     console.log("Error while adding work");
@@ -474,7 +524,6 @@ function addWorksToAPI() {
                     errorMessage.classList.remove("hide");
                 }
                 })
-            .then ( data => console.log(data))
             .catch(error => console.log(error));
 
         } catch (e) {
@@ -482,49 +531,26 @@ function addWorksToAPI() {
             const errorMessage = document.querySelector(".error-message");
             errorMessage.classList.remove("hide");
         }
-
-    })
 }
 
-addWorksToAPI();
-
-
-// RESET ADD IMAGE FORM AND IMAGE
-
+// RESET ADD IMAGE FORM
 function resetAddImageForm () {
-    const newWorkImage = document.querySelector("#new-image");
-    newWorkImage.src = ''; // RETURNS ERROR
-    document.querySelector("#add-image-form").reset();
-    showInputFile();
+    const addImageForm = document.querySelector("#add-image-form")
+    try {
+        assert(
+            isElement(addImageForm) === true
+            , "Form not found, element is not part of the DOM"
+            , TypeError
+            );
+        addImageForm.reset();
+        showInputFile();
+    } catch (error){
+        console.log(error.message);
+    }
 };
 
-// REFRESH PAGE ON CLICK OF PUBLISH BUTTON
-
-function publishChanges () {
-    const editBar = document.querySelector("#edit-mode")
-
-    editBar.addEventListener("click", (event) => {
-        if (event.target.matches("button")) {
-            location.reload();
-        }
-    })
-}
-
-publishChanges();
-
 // LOGOUT
-
 function logout () {
-
-    const logoutButton = document.querySelector("#logout");
-
-    logoutButton.addEventListener("click", () => {
-      sessionStorage.removeItem("token");
-    })
+    sessionStorage.removeItem("token");
+    location.reload();
 }
-
-logout();
-
-
-
-
