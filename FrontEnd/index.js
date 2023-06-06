@@ -387,20 +387,11 @@ function deleteWorks(event){
     function deleteWorksOnGAllery() {
         const galleryFigures = document.querySelectorAll("[data-category]");
 
-        try {
-            assert(
-                isElement(galleryFigures) === true
-                , "Cannot delete work from gallery, galleryFigures element is not part of the DOM"
-                , TypeError
-                );
             for(let i = 0; i < galleryFigures.length; i++) {
                 if(modalId === galleryFigures[i].dataset.id) {
                     galleryFigures[i].remove();
                 }
             }
-        } catch (error) {
-            console.log(error.message);
-        }
     }
     deleteWorksOnGAllery();
 
