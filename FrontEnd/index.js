@@ -99,32 +99,33 @@ document.addEventListener("click", (event) => {
     if (event.target.matches(".portfolio-title .modify-button p") || event.target.matches(".portfolio-title .modify-button img") ) {
         event.preventDefault();
         openModal(); // function that open modal
+        return;
     }
     if (event.target.matches("#close-modal")) {
-        closeModal(); // function that closes modal
+        closeModal(); return;// function that closes modal
     }
     if (event.target.matches("#modal-gallery")) {
-        closeModalOnBackdropClick (event) // function that closes modal when clicking the backdrop
+        closeModalOnBackdropClick (event); return;// function that closes modal when clicking the backdrop
     }
     if (event.target.matches("#add-image-button")) {
-        showModalSecondPage(); // function that hides page1 of modal and shows page 2
+        showModalSecondPage(); return;// function that hides page1 of modal and shows page 2
     }
     if (event.target.matches("#back-arrow")) {
-        showModalFirstPage(); // function the hides page 2 of modal and shows page 1
+        showModalFirstPage(); return;// function the hides page 2 of modal and shows page 1
     }
     // REFRESH PAGE ON CLICK OF PUBLISH BUTTON ON TOP OF THE EDIT PAGE (AESTHETIC BUTTON)
     if (event.target.matches(".edit-mode button")) {
-        location.reload();
+        location.reload(); return;
     }
     if (event.target.matches("#logout")) {
-        logout(); // function that logs out of edit mode
+        logout(); return;// function that logs out of edit mode
     }
     if (event.target.matches(".filters button")) {
         activefilterButtons(event); // function that activates button when clicked for filter by changing style to green
-        filterButtons(event); // function the uses the buttons to filter the gallery
+        filterButtons(event); return;// function the uses the buttons to filter the gallery
     }
     if (event.target.matches(".bin-icon")) {
-        deleteWorks(event);
+        deleteWorks(event); return;
         // function the englobes 3 functions, delete work in modal, delete work in gallery and delete work in API
     }
 })
@@ -134,6 +135,7 @@ document.addEventListener("submit", (event) => {
     if (event.target.matches("#add-image-form")){
         event.preventDefault();
         addWorksToAPI(); // function that adds works to API
+        return;
     }
 })
 
